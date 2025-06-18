@@ -96,7 +96,7 @@ const Hero: React.FC = () => {
         "-=0.8"
       );
 
-      // Hover animación para los botones
+      // Hover animation for buttons (disabled on mobile)
       const buttons = buttonsRef.current?.querySelectorAll("a");
       buttons?.forEach((button) => {
         button.addEventListener("mouseenter", () => {
@@ -107,20 +107,21 @@ const Hero: React.FC = () => {
         });
       });
 
-      // Floating image
+      // Floating image (simplified for mobile)
       gsap.to(imageRef.current, {
         y: -10,
         duration: 2,
         ease: "power1.inOut",
         yoyo: true,
         repeat: -1,
+        paused: window.innerWidth <= 640,
       });
     }, heroRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Slideshow logic (igual que antes)
+  // Slideshow logic
   useEffect(() => {
     images.forEach((src, index) => {
       const img = new window.Image();
@@ -179,100 +180,27 @@ const Hero: React.FC = () => {
       aria-label="Hero section for Jhon Jiménez portfolio"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column */}
-          <div className="text-center lg:text-left">
-            <div
-              ref={badgeRef}
-              className="inline-flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-full mb-8"
-            >
-              <Calendar size={16} className="text-brand-primary" />
-              <span className="text-brand-primary font-semibold">2025</span>
-            </div>
-
-            <h1
-              ref={titleRef}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary mb-4"
-            >
-              <span className="block">PORTAFOLIO</span>
-              <span className="block text-brand-primary-light">
-                JOHN JIMÉNEZ
-              </span>
-              <span className="block text-2xl sm:text-3xl lg:text-4xl font-normal">
-                PMM
-              </span>
-            </h1>
-
-            <p
-              ref={subtitleRef}
-              className="text-xl sm:text-2xl text-brand-primary-lighter mb-8 font-light"
-            >
-              Marketing Estratégico Digital
-            </p>
-
-            <div
-              ref={messageRef}
-              className="bg-gray-50 rounded-2xl p-6 sm:p-8 mb-8"
-            >
-              <p className="text-lg text-brand-primary-light leading-relaxed">
-                "Gracias por escribir... y estar interesado en mi trabajo como
-                experto en marketing digital, especializado en E-commerce y
-                Estrategia Digital."
-              </p>
-            </div>
-
-            <div
-              ref={buttonsRef}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-6"
-            >
-              <a
-                href="#servicios"
-                className="inline-flex items-center space-x-2 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 transform hover:scale-105"
-              >
-                <span className="font-medium">Conoce mis servicios</span>
-                <ArrowRight size={20} />
-              </a>
-              <a
-                href="#contacto"
-                aria-label="Contáctame con Jhon Jiménez"
-                className="inline-flex items-center space-x-2 border-2 border-brand-primary text-brand-primary px-8 py-4 rounded-full hover:bg-brand-primary hover:text-white transition-all duration-300"
-              >
-                <span className="font-medium">Contáctame</span>
-              </a>
-              <a
-                href="#planes"
-                aria-label="Contáctame con Jhon Jiménez"
-                className="inline-flex items-center space-x-2 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 transform hover:scale-105"
-              >
-                <span className="font-medium">Planes</span>
-              </a>
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Right Column - Image Slideshow */}
-          <div className="flex justify-center lg:justify-end">
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative">
             <div
               ref={imageRef}
-              className="relative w-full max-w-[20rem] sm:max-w-[24rem] lg:max-w-[28rem] aspect-square rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(19,43,60,0.15)] bg-gradient-to-br from-gray-50 to-gray-100"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
+              className="relative w-full max-w-[16rem] sm:max-w-[20rem] lg:max-w-[28rem] aspect-square rounded-2xl overflow-hidden shadow-[0_8px_24px_rgba(19,43,60,0.1)] bg-gradient-to-br from-gray-50 to-gray-100"
             >
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5 z-10"></div>
 
               <AnimatePresence>
                 {!imageError[currentImageIndex] && !allImagesFailed ? (
                   <motion.img
                     key={currentImageIndex}
                     src={images[currentImageIndex]}
-                    alt={`Jhon Jiménez - Marketing Estratégico Digital - Image ${
-                      currentImageIndex + 1
-                    }`}
+                    alt={`Jhon Jiménez - Marketing Estratégico Digital - Image ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover object-center bg-white transition-transform duration-500 group-hover:scale-105"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.6 }}
                     onError={() => {
                       setImageError((prev) => {
                         const newErrors = [...prev];
@@ -290,16 +218,12 @@ const Hero: React.FC = () => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <div className="text-center p-6">
-                      <div className="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                        <User size={40} className="text-brand-primary" />
+                    <div className="text-center p-4">
+                      <div className="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 animate-pulse">
+                        <User size={32} className="text-brand-primary" />
                       </div>
-                      <p className="text-brand-primary font-semibold text-lg">
-                        Jhon Jiménez
-                      </p>
-                      <p className="text-brand-primary-lighter text-sm mt-1">
-                        PMM - Marketing Digital
-                      </p>
+                      <p className="text-brand-primary font-semibold text-base">Jhon Jiménez</p>
+                      <p className="text-brand-primary-lighter text-xs mt-1">PMM - Marketing Digital</p>
                     </div>
                   </motion.div>
                 )}
@@ -307,25 +231,22 @@ const Hero: React.FC = () => {
 
               {/* Navigation Controls */}
               {images.length > 1 && (
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 z-20">
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 z-20">
                   <button
                     onClick={goToPrevious}
                     aria-label="Previous image"
-                    className="bg-white/80 backdrop-blur-sm text-brand-primary p-2.5 rounded-full hover:bg-white transition-all duration-300 shadow-sm"
+                    className="bg-white/80 backdrop-blur-sm text-brand-primary p-2 rounded-full hover:bg-white transition-all duration-300 shadow-sm"
                   >
-                    <ArrowLeft size={18} />
+                    <ArrowLeft size={16} />
                   </button>
-                  {/* Progress Dots */}
-                  <div className="flex space-x-1.5">
+                  <div className="flex space-x-1">
                     {images.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
                         aria-label={`Go to image ${index + 1}`}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          currentImageIndex === index
-                            ? "bg-brand-primary scale-125"
-                            : "bg-white/50 hover:bg-white/80"
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                          currentImageIndex === index ? "bg-brand-primary scale-125" : "bg-white/50 hover:bg-white/80"
                         }`}
                       ></button>
                     ))}
@@ -333,42 +254,93 @@ const Hero: React.FC = () => {
                   <button
                     onClick={goToNext}
                     aria-label="Next image"
-                    className="bg-white/80 backdrop-blur-sm text-brand-primary p-2.5 rounded-full hover:bg-white transition-all duration-300 shadow-sm"
+                    className="bg-white/80 backdrop-blur-sm text-brand-primary p-2 rounded-full hover:bg-white transition-all duration-300 shadow-sm"
                   >
-                    <ArrowRight size={18} />
+                    <ArrowRight size={16} />
                   </button>
                 </div>
               )}
 
               {/* Decorative Elements */}
               <motion.div
-                className="absolute -top-5 -right-5 w-24 h-24 bg-gradient-to-br from-brand-primary/20 to-brand-primary/5 rounded-full"
+                className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-brand-primary/15 to-brand-primary/5 rounded-full"
                 animate={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               ></motion.div>
               <motion.div
-                className="absolute -bottom-5 -left-5 w-20 h-20 bg-gradient-to-br from-brand-primary/15 to-brand-primary/5 rounded-full"
+                className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-full"
                 animate={{ scale: [1, 1.05, 1], rotate: [0, -5, 0] }}
-                transition={{
-                  duration: 3.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
               ></motion.div>
 
               {/* Badge */}
-              <div className="absolute top-4 left-4 bg-white/30 backdrop-blur-lg rounded-full px-3 py-1.5 shadow-md border border-white/50 z-20">
-                <div className="flex items-center space-x-1.5">
+              <div className="absolute top-3 left-3 bg-white/30 backdrop-blur-lg rounded-full px-2.5 py-1 shadow-md border border-white/50 z-20">
+                <div className="flex items-center space-x-1">
                   <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-brand-primary text-xs font-semibold">
-                    anxagencia
-                  </span>
+                  <span className="text-brand-primary text-xs font-semibold">anxagencia</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Left Column - Text Content */}
+          <div className="order-2 lg:order-1 text-center lg:text-left relative">
+            <h1
+              ref={titleRef}
+              className="text-2xl sm:text-3xl font-bold text-brand-primary mb-4 absolute -top-[8rem] sm:-top-[9rem] left-0 right-0 z-20 bg-white/80 backdrop-blur-sm py-3 px-2 rounded-t-2xl lg:static lg:bg-transparent lg:backdrop-blur-none lg:text-3xl lg:sm:text-4xl lg:lg:text-6xl lg:mb-4"
+            >
+              <span className="block text-brand-primary-light">JOHN JIMÉNEZ</span>
+              <span className="block text-lg sm:text-xl lg:text-xl lg:sm:text-2xl lg:lg:text-4xl font-normal">PMM</span>
+            </h1>
+            <div
+              ref={badgeRef}
+              className="inline-flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-full mb-6"
+            >
+              <Calendar size={16} className="text-brand-primary" />
+              <span className="text-brand-primary font-semibold">2025</span>
+            </div>
+
+            <p
+              ref={subtitleRef}
+              className="text-lg sm:text-xl lg:text-2xl text-brand-primary-lighter mb-6 font-light"
+            >
+              Marketing Estratégico Digital
+            </p>
+
+            <div
+              ref={messageRef}
+              className="bg-gray-50 rounded-2xl p-4 sm:p-6 lg:p-8 mb-6"
+            >
+              <p className="text-base sm:text-lg text-brand-primary-light leading-relaxed">
+                "Gracias por escribir... y estar interesado en mi trabajo como experto en marketing digital, especializado en E-commerce y Estrategia Digital."
+              </p>
+            </div>
+
+            <div
+              ref={buttonsRef}
+              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4"
+            >
+              <a
+                href="#servicios"
+                className="inline-flex items-center space-x-2 bg-[rgb(19,43,60)] text-white px-6 py-3 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 transform hover:scale-105"
+              >
+                <span className="font-medium">Conoce mis servicios</span>
+                <ArrowRight size={18} />
+              </a>
+              <a
+                href="#contacto"
+                aria-label="Contáctame con Jhon Jiménez"
+                className="inline-flex items-center space-x-2 border-2 border-brand-primary text-brand-primary px-6 py-3 rounded-full hover:bg-brand-primary hover:text-white transition-all duration-300"
+              >
+                <span className="font-medium">Contáctame</span>
+              </a>
+              <a
+                href="#planes"
+                aria-label="Contáctame con Jhon Jiménez"
+                className="inline-flex items-center space-x-2 bg-[rgb(19,43,60)] text-white px-6 py-3 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 transform hover:scale-105"
+              >
+                <span className="font-medium">Planes</span>
+              </a>
             </div>
           </div>
         </div>
