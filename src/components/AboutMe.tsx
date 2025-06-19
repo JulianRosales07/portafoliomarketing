@@ -254,36 +254,66 @@ const AboutMe: React.FC = () => {
   ];
 
   return (
-    <section ref={sectionRef} id="sobre-mi" className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section
+      ref={sectionRef}
+      id="sobre-mi"
+      className="py-24 bg-gradient-to-b from-white to-gray-50"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 ref={titleRef} className="text-3xl sm:text-4xl font-extrabold text-[rgb(19,43,60)] mb-8 tracking-tight">
+          <h2
+            ref={titleRef}
+            className="text-3xl sm:text-4xl font-extrabold text-[rgb(19,43,60)] mb-8 tracking-tight"
+          >
             Sobre Mí
           </h2>
         </div>
 
         {/* Introduction */}
         <div ref={introRef} className="max-w-4xl mx-auto mb-24">
-          <div className="bg-white rounded-3xl p-10 sm:p-14 shadow-lg">
-            <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
-              <div className="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
-                <img 
-                  src={john} 
-                  alt="Jhon Jiménez" 
-                  className="w-full h-full object-cover rounded-full border-4 border-[rgb(19,43,60)]/10"
-                />
-
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+            <div className="relative w-40 h-40 md:w-48 md:h-48 flex-shrink-0 rounded-lg overflow-hidden group">
+              {/* Subtle gradient overlay for elegance */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[rgb(19,43,60)]/10 transition-all duration-300 group-hover:to-[rgb(19,43,60)]/20"></div>
+              <img
+                src={john}
+                alt="John Jiménez"
+                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-102 group-hover:brightness-110"
+              />
+              {/* Clean border with soft hover glow */}
+              <div className="absolute inset-0 rounded-lg border-2 border-[rgb(19,43,60)]/10 transition-all duration-300 group-hover:border-[rgb(19,43,60)]/30 group-hover:shadow-[0_0_10px_rgba(19,43,60,0.2)]"></div>
+              {/* Refined badge positioned for square shape */}
+              <div className="absolute top-2 right-2 bg-[rgb(19,43,60)]/80 rounded-full px-3 py-1 text-xs font-semibold text-white transition-all duration-300 group-hover:bg-[rgb(19,43,60)] group-hover:scale-105">
+                PMM
               </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">
-                  John Jiménez - Product Marketing Manager
-                </h3>
-                <p className="text-lg text-[rgb(19,43,60)]/80 leading-relaxed mb-6 text-balance">
+            </div>
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">
+                John Jiménez - Product Marketing Manager
+              </h3>
+              <p
+                ref={el => {
+                  // Attach ref for GSAP animation
+                  if (introRef.current && el && !introRef.current.querySelector('p[data-animated]')) {
+                    el.setAttribute('data-animated', 'true');
+                    gsap.fromTo(
+                      el,
+                      { opacity: 0, y: 20 },
+                      {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                        delay: 0.2
+                      }
+                    );
+                  }
+                }}
+                className="text-lg text-[rgb(19,43,60)]/80 leading-relaxed mb-6 text-balance text-justify transition-all duration-500"
+              >
                 Soy Mercadólogo con más de 6 años de experiencia en marketing y publicidad digital e innovación, he desarrollado productos y servicios a nivel nacional e internacional en sectores como: moda en textiles y accesorios, medicina estética y de belleza, inmobiliario, gastronómico y hospitalidad. Además he participado en la formulación y ejecución de proyectos de fortalecimiento empresarial desde la transformación digital, análisis de datos, paid media y comunicaciones, aportando así, a procesos de crecimiento, sostenibilidad y expansión en el mediano plazo.
-                </p>
-              </div>
+              </p>
             </div>
           </div>
         </div>
@@ -293,24 +323,28 @@ const AboutMe: React.FC = () => {
           <h3 className="text-2xl font-bold text-[rgb(19,43,60)] text-center mb-12">
             Áreas de Especialización
           </h3>
-          
-          <div ref={skillsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+          <div
+            ref={skillsRef}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
             {skills.map((skill, index) => (
               <div
                 key={index}
                 className="bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-xl transition-all duration-300"
               >
                 <div className="w-14 h-14 bg-[rgb(19,43,60)]/10 rounded-2xl flex items-center justify-center mb-5">
-                  <div className="text-[rgb(19,43,60)]">
-                    {skill.icon}
-                  </div>
+                  <div className="text-[rgb(19,43,60)]">{skill.icon}</div>
                 </div>
                 <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-4">
                   {skill.category}
                 </h4>
                 <ul className="space-y-3">
                   {skill.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="text-[rgb(19,43,60)]/70 text-sm flex items-center">
+                    <li
+                      key={itemIndex}
+                      className="text-[rgb(19,43,60)]/70 text-sm flex items-center"
+                    >
                       <div className="w-2 h-2 bg-[rgb(19,43,60)] rounded-full mr-3"></div>
                       {item}
                     </li>
@@ -323,16 +357,17 @@ const AboutMe: React.FC = () => {
 
         {/* Experience Metrics */}
         <div className="mb-24">
-          <div ref={experienceRef} className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div
+            ref={experienceRef}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-8"
+          >
             {experience.map((item, index) => (
               <div
                 key={index}
                 className="text-center bg-white rounded-3xl p-8 shadow-sm"
               >
                 <div className="w-16 h-16 bg-[rgb(19,43,60)]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                  <div className="text-[rgb(19,43,60)]">
-                    {item.icon}
-                  </div>
+                  <div className="text-[rgb(19,43,60)]">{item.icon}</div>
                 </div>
                 <div className="text-2xl font-bold text-[rgb(19,43,60)] mb-3">
                   {item.metric}
@@ -350,17 +385,18 @@ const AboutMe: React.FC = () => {
           <h3 className="text-2xl font-bold text-[rgb(19,43,60)] text-center mb-12">
             Mis Valores Profesionales
           </h3>
-          
-          <div ref={valuesRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+          <div
+            ref={valuesRef}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          >
             {values.map((value, index) => (
               <div
                 key={index}
                 className="flex items-start space-x-5 bg-white rounded-3xl p-8 shadow-sm"
               >
                 <div className="w-12 h-12 bg-[rgb(19,43,60)] rounded-2xl flex items-center justify-center flex-shrink-0">
-                  <div className="text-white">
-                    {value.icon}
-                  </div>
+                  <div className="text-white">{value.icon}</div>
                 </div>
                 <div>
                   <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-3">
@@ -376,7 +412,10 @@ const AboutMe: React.FC = () => {
         </div>
 
         {/* Philosophy */}
-        <div ref={philosophyRef} className="bg-[rgb(19,43,60)] rounded-3xl p-10 sm:p-14 text-center">
+        <div
+          ref={philosophyRef}
+          className="bg-[rgb(19,43,60)] rounded-3xl p-10 sm:p-14 text-center"
+        >
           <div className="max-w-3xl mx-auto">
             <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Heart size={32} className="text-white" />
@@ -385,13 +424,17 @@ const AboutMe: React.FC = () => {
               Mi Filosofía de Trabajo
             </h3>
             <p className="text-white/90 text-lg leading-relaxed mb-6">
-              "Creo firmemente que el marketing digital exitoso no se trata solo de números y métricas, 
-              sino de crear conexiones auténticas entre las marcas y las personas. Cada proyecto es una 
-              oportunidad de contar una historia que resuene, genere valor y construya relaciones duraderas."
+              "Creo firmemente que el marketing digital exitoso no se trata solo
+              de números y métricas, sino de crear conexiones auténticas entre
+              las marcas y las personas. Cada proyecto es una oportunidad de
+              contar una historia que resuene, genere valor y construya
+              relaciones duraderas."
             </p>
             <div className="flex items-center justify-center space-x-2">
               <div className="w-8 h-0.5 bg-white/40 rounded-full"></div>
-              <span className="text-white/80 font-medium">John Jiménez, PMM</span>
+              <span className="text-white/80 font-medium">
+                John Jiménez, PMM
+              </span>
             </div>
           </div>
         </div>
