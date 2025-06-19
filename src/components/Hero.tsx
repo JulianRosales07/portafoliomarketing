@@ -340,7 +340,7 @@ const Hero: React.FC = () => {
                 className="group inline-flex items-center space-x-3 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
                 <span>Conoce mis servicios</span>
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                
               </a>
               <a
                 href="#contacto"
@@ -353,7 +353,7 @@ const Hero: React.FC = () => {
                 className="group inline-flex items-center space-x-3 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
                 <span>Planes</span>
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+
               </a>
             </div>
           </div>
