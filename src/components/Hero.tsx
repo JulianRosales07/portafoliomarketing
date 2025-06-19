@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowRight, ArrowLeft, Calendar, User } from "lucide-react";
+import { ArrowRight, ArrowLeft, Calendar, User, Star, Award, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import logo2 from "../assets/images/logo4.png";
@@ -23,99 +23,83 @@ const Hero: React.FC = () => {
   const buttonsRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const decorativeRef = useRef<HTMLDivElement>(null);
 
   // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.5 });
+      const tl = gsap.timeline({ delay: 0.3 });
 
-      tl.fromTo(
-        badgeRef.current,
-        { opacity: 0, scale: 0.8, y: -20 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.7)" }
+      tl.fromTo(badgeRef.current, 
+        { opacity: 0, scale: 0.5, y: -30, rotation: -10 },
+        { opacity: 1, scale: 1, y: 0, rotation: 0, duration: 0.8, ease: "back.out(2)" }
       );
 
-      tl.fromTo(
-        titleRef.current?.children || [],
-        { opacity: 0, x: -50, rotationX: 90 },
-        {
-          opacity: 1,
-          x: 0,
-          rotationX: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power3.out",
-        },
-        "-=0.3"
+      tl.fromTo(titleRef.current?.children || [], 
+        { opacity: 0, x: -100, rotationX: 90, scale: 0.8 },
+        { opacity: 1, x: 0, rotationX: 0, scale: 1, duration: 1, stagger: 0.15, ease: "power3.out" }, "-=0.4"
       );
 
-      tl.fromTo(
-        subtitleRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-        "-=0.4"
+      tl.fromTo(subtitleRef.current,
+        { opacity: 0, y: 40, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power2.out" }, "-=0.6"
       );
 
-      tl.fromTo(
-        messageRef.current,
-        { opacity: 0, scale: 0.95, y: 20 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power2.out",
-        },
-        "-=0.2"
+      tl.fromTo(statsRef.current?.children || [],
+        { opacity: 0, y: 20, scale: 0.8 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.5"
       );
 
-      tl.fromTo(
-        buttonsRef.current?.children || [],
-        { opacity: 0, y: 30, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
-        },
-        "-=0.3"
+      tl.fromTo(messageRef.current,
+        { opacity: 0, scale: 0.8, y: 30, rotationY: 15 },
+        { opacity: 1, scale: 1, y: 0, rotationY: 0, duration: 1, ease: "power2.out" }, "-=0.4"
       );
 
-      tl.fromTo(
-        imageRef.current,
-        { opacity: 0, x: 50, rotationY: 15 },
-        {
-          opacity: 1,
-          x: 0,
-          rotationY: 0,
-          duration: 1,
-          ease: "power3.out",
-        },
-        "-=0.8"
+      tl.fromTo(buttonsRef.current?.children || [],
+        { opacity: 0, y: 40, scale: 0.8, rotationX: 45 },
+        { opacity: 1, y: 0, scale: 1, rotationX: 0, duration: 0.8, stagger: 0.15, ease: "back.out(1.7)" }, "-=0.4"
       );
 
-      // Hover animation for buttons (disabled on mobile)
+      tl.fromTo(imageRef.current,
+        { opacity: 0, x: 100, rotationY: 25, scale: 0.8 },
+        { opacity: 1, x: 0, rotationY: 0, scale: 1, duration: 1.2, ease: "power3.out" }, "-=1"
+      );
+
+      tl.fromTo(decorativeRef.current?.children || [],
+        { opacity: 0, scale: 0, rotation: 180 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.8, stagger: 0.2, ease: "back.out(2)" }, "-=0.8"
+      );
+
+      // Hover animation for buttons
       const buttons = buttonsRef.current?.querySelectorAll("a");
       buttons?.forEach((button) => {
         button.addEventListener("mouseenter", () => {
-          gsap.to(button, { scale: 1.05, duration: 0.3, ease: "power2.out" });
+          gsap.to(button, { scale: 1.08, y: -3, boxShadow: "0 10px 25px rgba(19, 43, 60, 0.2)", duration: 0.3, ease: "power2.out" });
         });
         button.addEventListener("mouseleave", () => {
-          gsap.to(button, { scale: 1, duration: 0.3, ease: "power2.out" });
+          gsap.to(button, { scale: 1, y: 0, boxShadow: "0 0px 0px rgba(19, 43, 60, 0)", duration: 0.3, ease: "power2.out" });
         });
       });
 
-      // Floating image (simplified for mobile)
+      // Floating image
       gsap.to(imageRef.current, {
-        y: -10,
-        duration: 2,
+        y: -15,
+        duration: 3,
         ease: "power1.inOut",
         yoyo: true,
-        repeat: -1,
-        paused: window.innerWidth <= 640,
+        repeat: -1
       });
+
+      // Decorative elements rotation
+      gsap.to(decorativeRef.current?.children || [], {
+        rotation: 360,
+        duration: 20,
+        ease: "none",
+        repeat: -1,
+        stagger: 5
+      });
+
     }, heroRef);
 
     return () => ctx.revert();
@@ -176,17 +160,21 @@ const Hero: React.FC = () => {
     <section
       ref={heroRef}
       id="hero"
-      className="min-h-screen flex items-center justify-center bg-white pt-16"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-50/30 to-white pt-16 pb-8 relative overflow-hidden"
       aria-label="Hero section for Jhon Jiménez portfolio"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Decorative background elements */}
+      <div ref={decorativeRef} className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-[rgb(19,43,60)]/5 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-[rgb(19,43,60)]/3 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-[rgb(19,43,60)]/4 rounded-full blur-lg"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Right Column - Image Slideshow */}
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative">
-            <div
-              ref={imageRef}
-              className="relative w-full max-w-[16rem] sm:max-w-[20rem] lg:max-w-[28rem] aspect-square rounded-2xl overflow-hidden shadow-[0_8px_24px_rgba(19,43,60,0.1)] bg-gradient-to-br from-gray-50 to-gray-100"
-            >
+            <div ref={imageRef} className="relative w-full max-w-[16rem] sm:max-w-[20rem] lg:max-w-[28rem] aspect-square rounded-2xl overflow-hidden shadow-[0_8px_24px_rgba(19,43,60,0.1)] bg-gradient-to-br from-gray-50 to-gray-100">
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5 z-10"></div>
 
@@ -261,17 +249,18 @@ const Hero: React.FC = () => {
                 </div>
               )}
 
-              {/* Decorative Elements */}
-              <motion.div
-                className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-brand-primary/15 to-brand-primary/5 rounded-full"
-                animate={{ scale: [1, 1.1, 1], rotate: [0, 5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              ></motion.div>
-              <motion.div
-                className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 rounded-full"
-                animate={{ scale: [1, 1.05, 1], rotate: [0, -5, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-              ></motion.div>
+              {/* Floating Elements */}
+              <div className="absolute -top-3 -right-3 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border border-[rgb(19,43,60)]/10">
+                <Star size={20} className="text-yellow-500" />
+              </div>
+              <div className="absolute -bottom-3 -left-3 w-14 h-14 bg-[rgb(19,43,60)] rounded-full shadow-lg flex items-center justify-center">
+                <Award size={18} className="text-white" />
+              </div>
+              <div className="absolute top-1/2 -left-4 w-10 h-10 bg-green-500 rounded-full shadow-lg flex items-center justify-center">
+                <Target size={14} className="text-white" />
+              </div>
+              {/* Subtle Ring */}
+              <div className="absolute inset-0 rounded-3xl border-2 border-[rgb(19,43,60)]/10 pointer-events-none"></div>
 
               {/* Badge */}
               <div className="absolute top-3 left-3 bg-white/30 backdrop-blur-lg rounded-full px-2.5 py-1 shadow-md border border-white/50 z-20">
@@ -285,61 +274,86 @@ const Hero: React.FC = () => {
 
           {/* Left Column - Text Content */}
           <div className="order-2 lg:order-1 text-center lg:text-left relative">
+            <div ref={badgeRef} className="inline-flex items-center space-x-3 bg-white/80 backdrop-blur-sm border border-[rgb(19,43,60)]/10 px-6 py-3 rounded-full mb-6 shadow-lg">
+              <Calendar size={18} className="text-[rgb(19,43,60)]" />
+              <span className="text-[rgb(19,43,60)] font-bold text-lg">2025</span>
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
             <h1
               ref={titleRef}
-              className="text-2xl sm:text-3xl font-bold text-brand-primary mb-4 absolute -top-[8rem] sm:-top-[9rem] left-0 right-0 z-20 bg-white/80 backdrop-blur-sm py-3 px-2 rounded-t-2xl lg:static lg:bg-transparent lg:backdrop-blur-none lg:text-3xl lg:sm:text-4xl lg:lg:text-6xl lg:mb-4"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-[rgb(19,43,60)] mb-4 leading-tight"
             >
-              <span className="block text-brand-primary-light">JOHN JIMÉNEZ</span>
-              <span className="block text-lg sm:text-xl lg:text-xl lg:sm:text-2xl lg:lg:text-4xl font-normal">PMM</span>
+              <span className="block text-[rgb(19,43,60)]/90 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
+                JHON JIMÉNEZ
+              </span>
+              <span className="block text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-normal text-[rgb(19,43,60)]/70 mt-1">
+                PMM
+              </span>
             </h1>
-            <div
-              ref={badgeRef}
-              className="inline-flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-full mb-6"
-            >
-              <Calendar size={16} className="text-brand-primary" />
-              <span className="text-brand-primary font-semibold">2025</span>
-            </div>
-
             <p
               ref={subtitleRef}
-              className="text-lg sm:text-xl lg:text-2xl text-brand-primary-lighter mb-6 font-light"
+              className="text-xl sm:text-2xl lg:text-3xl text-[rgb(19,43,60)]/70 mb-6 font-light"
             >
               Marketing Estratégico Digital
             </p>
-
+            {/* Stats Row */}
+            <div ref={statsRef} className="flex flex-wrap justify-center lg:justify-start gap-4 mb-6">
+              <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-[rgb(19,43,60)]/10">
+                <Star size={16} className="text-yellow-500" />
+                <span className="text-[rgb(19,43,60)] font-semibold text-sm">+50 Proyectos</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-[rgb(19,43,60)]/10">
+                <Award size={16} className="text-[rgb(19,43,60)]" />
+                <span className="text-[rgb(19,43,60)] font-semibold text-sm">7 Países</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-[rgb(19,43,60)]/10">
+                <Target size={16} className="text-green-600" />
+                <span className="text-[rgb(19,43,60)] font-semibold text-sm">ROI +500%</span>
+              </div>
+            </div>
             <div
               ref={messageRef}
-              className="bg-gray-50 rounded-2xl p-4 sm:p-6 lg:p-8 mb-6"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 sm:p-6 mb-6 shadow-xl border border-[rgb(19,43,60)]/10"
             >
-              <p className="text-base sm:text-lg text-brand-primary-light leading-relaxed">
-                "Gracias por escribir... y estar interesado en mi trabajo como experto en marketing digital, especializado en E-commerce y Estrategia Digital."
-              </p>
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User size={18} className="text-[rgb(19,43,60)]" />
+                </div>
+                <div>
+                  <p className="text-base sm:text-lg text-[rgb(19,43,60)]/90 leading-relaxed font-medium">
+                    "Gracias por escribir... y estar interesado en mi trabajo como experto en marketing digital, 
+                    especializado en E-commerce y Estrategia Digital."
+                  </p>
+                  <div className="mt-3 flex items-center space-x-2">
+                    <div className="w-6 h-0.5 bg-[rgb(19,43,60)] rounded-full"></div>
+                    <span className="text-[rgb(19,43,60)]/60 text-sm font-medium">Jhon Jiménez</span>
+                  </div>
+                </div>
+              </div>
             </div>
-
             <div
               ref={buttonsRef}
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4"
             >
               <a
                 href="#servicios"
-                className="inline-flex items-center space-x-2 bg-[rgb(19,43,60)] text-white px-6 py-3 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 transform hover:scale-105"
+                className="group inline-flex items-center space-x-3 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
-                <span className="font-medium">Conoce mis servicios</span>
-                <ArrowRight size={18} />
+                <span>Conoce mis servicios</span>
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </a>
               <a
                 href="#contacto"
-                aria-label="Contáctame con Jhon Jiménez"
-                className="inline-flex items-center space-x-2 border-2 border-brand-primary text-brand-primary px-6 py-3 rounded-full hover:bg-brand-primary hover:text-white transition-all duration-300"
+                className="group inline-flex items-center space-x-3 bg-white border-2 border-[rgb(19,43,60)] text-[rgb(19,43,60)] px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)] hover:text-white transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
-                <span className="font-medium">Contáctame</span>
+                <span>Contáctame</span>
               </a>
               <a
                 href="#planes"
-                aria-label="Contáctame con Jhon Jiménez"
-                className="inline-flex items-center space-x-2 bg-[rgb(19,43,60)] text-white px-6 py-3 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 transform hover:scale-105"
+                className="group inline-flex items-center space-x-3 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
-                <span className="font-medium">Planes</span>
+                <span>Planes</span>
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
           </div>

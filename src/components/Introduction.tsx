@@ -96,7 +96,7 @@ const Introduction: React.FC = () => {
     <section ref={sectionRef} className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 ref={titleRef} className="text-3xl sm:text-4xl font-bold text-[rgb(19,43,60)] mb-8">
+          <h2 ref={titleRef} className="text-3xl sm:text-4xl font-bold text-[rgb(2, 149, 255)] mb-8">
             Transformación Digital Estratégica
           </h2>
           

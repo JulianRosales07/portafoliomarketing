@@ -1,7 +1,40 @@
-import React from 'react';
+
 import { Heart, ArrowUp } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Footer: React.FC = () => {
+  const footerRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animación del footer completo
+      gsap.fromTo(contentRef.current?.children || [],
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: "top 90%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -9,16 +42,22 @@ const Footer: React.FC = () => {
     });
   };
 
-  return (
-    <footer className="bg-[rgb(19,43,60)] text-white py-16">
+ return (
+    <footer ref={footerRef} className="bg-[rgb(19,43,60)] text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
+        <div ref={contentRef} className="text-center">
           <div className="mb-8">
             <h3 className="text-2xl font-bold mb-2">JHON JIMÉNEZ - PMM</h3>
             <p className="text-white/80">Marketing Estratégico Digital</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 mb-8">
+            <a
+              href="#sobre-mi"
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              Sobre Mí
+            </a>
             <a
               href="#servicios"
               className="text-white/80 hover:text-white transition-colors"

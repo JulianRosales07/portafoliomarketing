@@ -57,6 +57,7 @@ const Header: React.FC = () => {
 
   const menuItems = [
     { label: 'Inicio', href: '#hero' },
+    { label: 'Sobre Mí', href: '#sobre-mi' },
     { label: 'Servicios', href: '#servicios' },
     { label: 'Resultados', href: '#resultados' },
     { label: 'Planes', href: '#planes' },
