@@ -2,20 +2,69 @@ import React, { useState, useEffect, useRef } from "react";
 import { ArrowRight, ArrowLeft, Calendar, User, Star, Award, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import logo2 from "../assets/images/logo4.png";
 import logo3 from "../assets/images/logo3.png";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const images = [logo2, logo3, "https://via.placeholder.com/384"];
 
+const AnimatedText: React.FC = () => {
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const words = textRef.current?.textContent?.trim().split(/\s+/);
+      if (textRef.current && words) {
+        // Set innerHTML with words only, no cursor
+        textRef.current.innerHTML = words
+          .map(word => `<span class="word inline-block opacity-0">${word}</span>`)
+          .join(' ');
+
+        const wordElements = textRef.current.querySelectorAll('.word');
+
+        // Animate words to appear one by one with 2-second delay
+        gsap.fromTo(
+          wordElements,
+          { opacity: 0, color: 'rgb(107, 114, 128)' },
+          {
+            opacity: 1,
+            color: 'rgb(19, 43, 60)',
+            duration: 0.3,
+            stagger: 0.15,
+            ease: 'power2.in',
+            delay: 2,
+            scrollTrigger: {
+              trigger: textRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, textRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <p
+      ref={textRef}
+      className="text-base sm:text-lg text-[rgb(19,43,60)]/90 leading-relaxed font-medium"
+    >
+      Gracias por escribir... y estar interesado en mi trabajo como experto en marketing digital, especializado en E-commerce y Estrategia Digital.
+    </p>
+  );
+};
+
 const Hero: React.FC = () => {
-  // Slideshow states
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageError, setImageError] = useState<boolean[]>(
     new Array(images.length).fill(false)
   );
   const [isPaused, setIsPaused] = useState(false);
 
-  // GSAP refs
   const heroRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -26,7 +75,6 @@ const Hero: React.FC = () => {
   const statsRef = useRef<HTMLDivElement>(null);
   const decorativeRef = useRef<HTMLDivElement>(null);
 
-  // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ delay: 0.3 });
@@ -71,7 +119,6 @@ const Hero: React.FC = () => {
         { opacity: 1, scale: 1, rotation: 0, duration: 0.8, stagger: 0.2, ease: "back.out(2)" }, "-=0.8"
       );
 
-      // Hover animation for buttons
       const buttons = buttonsRef.current?.querySelectorAll("a");
       buttons?.forEach((button) => {
         button.addEventListener("mouseenter", () => {
@@ -82,7 +129,6 @@ const Hero: React.FC = () => {
         });
       });
 
-      // Floating image
       gsap.to(imageRef.current, {
         y: -15,
         duration: 3,
@@ -91,7 +137,6 @@ const Hero: React.FC = () => {
         repeat: -1
       });
 
-      // Decorative elements rotation
       gsap.to(decorativeRef.current?.children || [], {
         rotation: 360,
         duration: 20,
@@ -105,7 +150,6 @@ const Hero: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  // Slideshow logic
   useEffect(() => {
     images.forEach((src, index) => {
       const img = new window.Image();
@@ -163,7 +207,6 @@ const Hero: React.FC = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-50/30 to-white pt-16 pb-8 relative overflow-hidden"
       aria-label="Hero section for Jhon Jiménez portfolio"
     >
-      {/* Decorative background elements */}
       <div ref={decorativeRef} className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-32 bg-[rgb(19,43,60)]/5 rounded-full blur-xl"></div>
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-[rgb(19,43,60)]/3 rounded-full blur-2xl"></div>
@@ -172,12 +215,9 @@ const Hero: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Right Column - Image Slideshow */}
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative">
             <div ref={imageRef} className="relative w-full max-w-[16rem] sm:max-w-[20rem] lg:max-w-[28rem] aspect-square rounded-2xl overflow-hidden shadow-[0_8px_24px_rgba(19,43,60,0.1)] bg-gradient-to-br from-gray-50 to-gray-100">
-              {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5 z-10"></div>
-
               <AnimatePresence>
                 {!imageError[currentImageIndex] && !allImagesFailed ? (
                   <motion.img
@@ -216,8 +256,6 @@ const Hero: React.FC = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {/* Navigation Controls */}
               {images.length > 1 && (
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 z-20">
                   <button
@@ -248,8 +286,6 @@ const Hero: React.FC = () => {
                   </button>
                 </div>
               )}
-
-              {/* Floating Elements */}
               <div className="absolute -top-3 -right-3 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border border-[rgb(19,43,60)]/10">
                 <Star size={20} className="text-yellow-500" />
               </div>
@@ -259,10 +295,7 @@ const Hero: React.FC = () => {
               <div className="absolute top-1/2 -left-4 w-10 h-10 bg-green-500 rounded-full shadow-lg flex items-center justify-center">
                 <Target size={14} className="text-white" />
               </div>
-              {/* Subtle Ring */}
               <div className="absolute inset-0 rounded-3xl border-2 border-[rgb(19,43,60)]/10 pointer-events-none"></div>
-
-              {/* Badge */}
               <div className="absolute top-3 left-3 bg-white/30 backdrop-blur-lg rounded-full px-2.5 py-1 shadow-md border border-white/50 z-20">
                 <div className="flex items-center space-x-1">
                   <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
@@ -271,8 +304,6 @@ const Hero: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Left Column - Text Content */}
           <div className="order-2 lg:order-1 text-center lg:text-left relative">
             <div ref={badgeRef} className="inline-flex items-center space-x-3 bg-white/80 backdrop-blur-sm border border-[rgb(19,43,60)]/10 px-6 py-3 rounded-full mb-6 shadow-lg">
               <Calendar size={18} className="text-[rgb(19,43,60)]" />
@@ -296,7 +327,6 @@ const Hero: React.FC = () => {
             >
               Marketing Estratégico Digital
             </p>
-            {/* Stats Row */}
             <div ref={statsRef} className="flex flex-wrap justify-center lg:justify-start gap-4 mb-6">
               <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-[rgb(19,43,60)]/10">
                 <Star size={16} className="text-yellow-500" />
@@ -313,17 +343,14 @@ const Hero: React.FC = () => {
             </div>
             <div
               ref={messageRef}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 sm:p-6 mb-6 shadow-xl border border-[rgb(19,43,60)]/10"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 sm:p-6 mb-6"
             >
               <div className="flex items-start space-x-3">
                 <div className="w-10 h-10 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center flex-shrink-0">
                   <User size={18} className="text-[rgb(19,43,60)]" />
                 </div>
                 <div>
-                  <p className="text-base sm:text-lg text-[rgb(19,43,60)]/90 leading-relaxed font-medium">
-                    "Gracias por escribir... y estar interesado en mi trabajo como experto en marketing digital, 
-                    especializado en E-commerce y Estrategia Digital."
-                  </p>
+                  <AnimatedText />
                   <div className="mt-3 flex items-center space-x-2">
                     <div className="w-6 h-0.5 bg-[rgb(19,43,60)] rounded-full"></div>
                     <span className="text-[rgb(19,43,60)]/60 text-sm font-medium">John Jiménez</span>
@@ -340,7 +367,6 @@ const Hero: React.FC = () => {
                 className="group inline-flex items-center space-x-3 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
                 <span>Conoce mis servicios</span>
-                
               </a>
               <a
                 href="#contacto"
@@ -353,7 +379,6 @@ const Hero: React.FC = () => {
                 className="group inline-flex items-center space-x-3 bg-[rgb(19,43,60)] text-white px-8 py-4 rounded-full hover:bg-[rgb(19,43,60)]/90 transition-all duration-300 shadow-lg w-full sm:w-auto justify-center font-semibold text-lg"
               >
                 <span>Planes</span>
-
               </a>
             </div>
           </div>
