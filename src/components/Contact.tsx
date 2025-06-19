@@ -119,7 +119,7 @@ const Contact: React.FC = () => {
       label: "LinkedIn",
       value: "John Jiménez",
       icon: <Linkedin size={20} />,
-      link: "https://linkedin.com/in/johnjimenez"
+      link: "https://www.linkedin.com/in/john-jimenez1/"
     }
   ];
 
