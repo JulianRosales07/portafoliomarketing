@@ -391,7 +391,7 @@ const AboutMe: React.FC = () => {
             </p>
             <div className="flex items-center justify-center space-x-2">
               <div className="w-8 h-0.5 bg-white/40 rounded-full"></div>
-              <span className="text-white/80 font-medium">Jhon Jiménez, PMM</span>
+              <span className="text-white/80 font-medium">John Jiménez, PMM</span>
             </div>
           </div>
         </div>
