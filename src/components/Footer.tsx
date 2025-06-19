@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={contentRef} className="text-center">
           <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-2">JHON JIMÉNEZ - PMM</h3>
+            <h3 className="text-2xl font-bold mb-2">JOHN JIMÉNEZ - PMM</h3>
             <p className="text-white/80">Marketing Estratégico Digital</p>
           </div>
 
@@ -102,7 +102,7 @@ const Footer: React.FC = () => {
             </div>
             
             <div className="mt-6 text-center text-white/60 text-sm">
-              <p>&copy; 2025 Jhon Jiménez. Todos los derechos reservados.</p>
+              <p>&copy; 2025 John Jiménez. Todos los derechos reservados.</p>
             </div>
           </div>
         </div>
