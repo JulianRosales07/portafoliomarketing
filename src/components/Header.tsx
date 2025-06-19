@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const headerRef = useRef<HTMLElement>(null);
-  const logoRef = useRef<HTMLSpanElement>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -69,9 +69,9 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <span ref={logoRef} className="text-xl font-bold text-[rgb(19,43,60)]">
+            <a href="#hero" ref={logoRef} className="text-xl font-bold text-[rgb(19,43,60)] hover:opacity-80 transition-opacity duration-200">
               JHON JIMÉNEZ
-            </span>
+            </a>
           </div>
 
           {/* Desktop Navigation */}
