@@ -278,7 +278,7 @@ const AboutMe: React.FC = () => {
               </div>
               <div className="text-center md:text-left">
                 <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">
-                  Jhon Jiménez - Product Marketing Manager
+                  John Jiménez - Product Marketing Manager
                 </h3>
                 <p className="text-lg text-[rgb(19,43,60)]/80 leading-relaxed mb-6 text-balance">
                 Soy Mercadólogo con más de 6 años de experiencia en marketing y publicidad digital e innovación, he desarrollado productos y servicios a nivel nacional e internacional en sectores como: moda en textiles y accesorios, medicina estética y de belleza, inmobiliario, gastronómico y hospitalidad. Además he participado en la formulación y ejecución de proyectos de fortalecimiento empresarial desde la transformación digital, análisis de datos, paid media y comunicaciones, aportando así, a procesos de crecimiento, sostenibilidad y expansión en el mediano plazo.

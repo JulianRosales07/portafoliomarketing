@@ -210,7 +210,7 @@ const Hero: React.FC = () => {
                       <div className="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 animate-pulse">
                         <User size={32} className="text-brand-primary" />
                       </div>
-                      <p className="text-brand-primary font-semibold text-base">Jhon Jiménez</p>
+                      <p className="text-brand-primary font-semibold text-base">John Jiménez</p>
                       <p className="text-brand-primary-lighter text-xs mt-1">PMM - Marketing Digital</p>
                     </div>
                   </motion.div>
@@ -284,7 +284,7 @@ const Hero: React.FC = () => {
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-[rgb(19,43,60)] mb-4 leading-tight"
             >
               <span className="block text-[rgb(19,43,60)]/90 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
-                JHON JIMÉNEZ
+                JOHN JIMÉNEZ
               </span>
               <span className="block text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-normal text-[rgb(19,43,60)]/70 mt-1">
                 PMM
@@ -326,7 +326,7 @@ const Hero: React.FC = () => {
                   </p>
                   <div className="mt-3 flex items-center space-x-2">
                     <div className="w-6 h-0.5 bg-[rgb(19,43,60)] rounded-full"></div>
-                    <span className="text-[rgb(19,43,60)]/60 text-sm font-medium">Jhon Jiménez</span>
+                    <span className="text-[rgb(19,43,60)]/60 text-sm font-medium">John Jiménez</span>
                   </div>
                 </div>
               </div>

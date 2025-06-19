@@ -70,7 +70,7 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <a href="#hero" ref={logoRef} className="text-xl font-bold text-[rgb(19,43,60)] hover:opacity-80 transition-opacity duration-200">
-              JHON JIMÉNEZ
+              JOHN JIMÉNEZ
             </a>
           </div>
 
