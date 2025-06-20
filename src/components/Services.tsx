@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Zap, ShoppingCart, Users, ArrowUp, DollarSign, TrendingDown } from 'lucide-react';
+import { Zap, ShoppingCart, Users, ArrowUp, DollarSign, TrendingDown, Target, Brain, Lightbulb } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -137,91 +137,120 @@ const Services: React.FC = () => {
   const services = [
     {
       title: "Marketing Estratégico",
-      icon: <Zap size={32} />,
-      description: "Estrategias digitales personalizadas para impulsar tu marca"
+      icon: <Brain size={32} />,
+      description: "Estrategias digitales personalizadas para impulsar tu marca",
+      features: ["Análisis de mercado", "Estrategia de contenido", "Posicionamiento de marca", "Growth hacking"],
+      color: "from-blue-50 to-indigo-50",
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600"
     },
     {
       title: "E-commerce",
       icon: <ShoppingCart size={32} />,
-      description: "Soluciones completas para potenciar tu tienda online"
+      description: "Soluciones completas para potenciar tu tienda online",
+      features: ["Optimización de conversión", "UX/UI para ventas", "Automatización", "Analytics avanzado"],
+      color: "from-green-50 to-emerald-50",
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600"
     },
     {
       title: "Consultorías",
       icon: <Users size={32} />,
-      description: "Asesoramiento experto para optimizar tus procesos digitales"
+      description: "Asesoramiento experto para optimizar tus procesos digitales",
+      features: ["Auditoría digital", "Transformación digital", "Capacitación", "Mentoring estratégico"],
+      color: "from-purple-50 to-violet-50",
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600"
     }
   ];
 
   const benefits = [
     {
       title: "Posiciona y genera experiencias digitales",
-      icon: <ArrowUp size={24} />,
-      description: "Construye una presencia digital sólida y memorable"
+      icon: <Target size={24} />,
+      description: "Construye una presencia digital sólida y memorable que conecte con tu audiencia objetivo",
+      metrics: "+300% engagement promedio"
     },
     {
       title: "Incrementa tus leads y ventas",
       icon: <DollarSign size={24} />,
-      description: "Estrategias enfocadas en conversión y ROI"
+      description: "Estrategias enfocadas en conversión y ROI que transforman visitantes en clientes",
+      metrics: "+500% ROI promedio"
     },
     {
       title: "Convierte más, mejora tus ventas y disminuye tus costos",
       icon: <TrendingDown size={24} />,
-      description: "Optimización inteligente de recursos y procesos"
+      description: "Optimización inteligente de recursos y procesos para maximizar resultados",
+      metrics: "-40% costos de adquisición"
     }
   ];
 
   return (
-    <section ref={sectionRef} id="servicios" className="py-20 bg-white">
+    <section ref={sectionRef} id="servicios" className="py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Services Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-20">
           <h2 ref={titleRef} className="text-3xl sm:text-4xl font-bold text-[rgb(19,43,60)] mb-8">
             Servicios Especializados
           </h2>
           
-          <div ref={servicesRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div ref={servicesRef} className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300"
+                className={`bg-gradient-to-br ${service.color} rounded-3xl p-8 hover:shadow-xl transition-all duration-300 border border-white/50`}
               >
-                <div className="w-16 h-16 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <div className="text-[rgb(19,43,60)]">
+                <div className={`w-16 h-16 ${service.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6`}>
+                  <div className={service.iconColor}>
                     {service.icon}
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-[rgb(19,43,60)] mb-4">
+                <h3 className="text-xl font-semibold text-[rgb(19,43,60)] mb-4 text-center">
                   {service.title}
                 </h3>
-                <p className="text-[rgb(19,43,60)]/70 leading-relaxed">
+                <p className="text-[rgb(19,43,60)]/70 leading-relaxed mb-6 text-center">
                   {service.description}
                 </p>
+                
+                {/* Features List */}
+                <div className="space-y-3">
+                  {service.features.map((feature, featureIndex) => (
+                    <div key={featureIndex} className="flex items-center">
+                      <div className="w-2 h-2 bg-[rgb(19,43,60)] rounded-full mr-3 flex-shrink-0"></div>
+                      <span className="text-[rgb(19,43,60)]/80 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Benefits Section */}
-        <div className="bg-gray-50 rounded-2xl p-8 sm:p-12">
-          <h3 ref={benefitsTitleRef} className="text-2xl sm:text-3xl font-bold text-[rgb(19,43,60)] text-center mb-10">
+        <div className="bg-white rounded-3xl p-10 sm:p-16 shadow-sm border border-gray-100">
+          <h3 ref={benefitsTitleRef} className="text-2xl sm:text-3xl font-bold text-[rgb(19,43,60)] text-center mb-12">
             Beneficios Destacados
           </h3>
           
-          <div ref={benefitsRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div ref={benefitsRef} className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-[rgb(19,43,60)] rounded-full flex items-center justify-center flex-shrink-0">
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 bg-[rgb(19,43,60)] rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <div className="text-white">
                     {benefit.icon}
                   </div>
                 </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-2">
-                    {benefit.title}
-                  </h4>
-                  <p className="text-[rgb(19,43,60)]/70">
-                    {benefit.description}
-                  </p>
+                <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-4">
+                  {benefit.title}
+                </h4>
+                <p className="text-[rgb(19,43,60)]/70 mb-4 leading-relaxed">
+                  {benefit.description}
+                </p>
+                <div className="inline-flex items-center bg-[rgb(19,43,60)]/5 rounded-full px-4 py-2">
+                  <Lightbulb size={16} className="text-[rgb(19,43,60)] mr-2" />
+                  <span className="text-[rgb(19,43,60)] font-medium text-sm">
+                    {benefit.metrics}
+                  </span>
                 </div>
               </div>
             ))}

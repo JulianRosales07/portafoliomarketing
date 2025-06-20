@@ -27,10 +27,11 @@ const AboutMe: React.FC = () => {
   const valuesRef = useRef<HTMLDivElement>(null);
   const experienceRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
+  const animatedTextRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animación del título principal
+      // Animación del título principal con efecto de color en scroll
       gsap.fromTo(titleRef.current,
         { opacity: 0, y: 50, scale: 0.9 },
         {
@@ -46,6 +47,29 @@ const AboutMe: React.FC = () => {
           }
         }
       );
+
+      // Animación de color del texto principal en scroll
+      if (animatedTextRef.current) {
+        gsap.fromTo(animatedTextRef.current,
+          { 
+            color: "rgba(19, 43, 60, 0.4)",
+            opacity: 0.7
+          },
+          {
+            color: "rgba(19, 43, 60, 0.9)",
+            opacity: 1,
+            duration: 2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: animatedTextRef.current,
+              start: "top 70%",
+              end: "bottom 30%",
+              scrub: 1,
+              toggleActions: "play reverse play reverse"
+            }
+          }
+        );
+      }
 
       // Animación de la introducción
       gsap.fromTo(introRef.current,
@@ -293,24 +317,8 @@ const AboutMe: React.FC = () => {
                 John Jiménez - Product Marketing Manager
               </h3>
               <p
-                ref={el => {
-                  // Attach ref for GSAP animation
-                  if (introRef.current && el && !introRef.current.querySelector('p[data-animated]')) {
-                    el.setAttribute('data-animated', 'true');
-                    gsap.fromTo(
-                      el,
-                      { opacity: 0, y: 20 },
-                      {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        ease: "power2.out",
-                        delay: 0.2
-                      }
-                    );
-                  }
-                }}
-                className="text-lg text-[rgb(19,43,60)]/80 leading-relaxed mb-6 text-balance text-justify transition-all duration-500"
+                ref={animatedTextRef}
+                className="text-lg leading-relaxed mb-6 text-balance text-justify transition-all duration-500"
               >
                 Soy Mercadólogo con más de 6 años de experiencia en marketing y publicidad digital e innovación, he desarrollado productos y servicios a nivel nacional e internacional en sectores como: moda en textiles y accesorios, medicina estética y de belleza, inmobiliario, gastronómico y hospitalidad. Además he participado en la formulación y ejecución de proyectos de fortalecimiento empresarial desde la transformación digital, análisis de datos, paid media y comunicaciones, aportando así, a procesos de crecimiento, sostenibilidad y expansión en el mediano plazo.
               </p>

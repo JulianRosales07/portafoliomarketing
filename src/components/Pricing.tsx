@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, FileText, Search, Settings, GitBranch, Calendar, BarChart, Star, X } from 'lucide-react';
+import { Check, FileText, Search, Settings, GitBranch, Calendar, BarChart, Star, X, Send } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import emailjs from '@emailjs/browser';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,6 +39,7 @@ const Pricing: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<PlanDetails | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
@@ -46,6 +48,11 @@ const Pricing: React.FC = () => {
     preferredTime: '',
   });
   const [formErrors, setFormErrors] = useState<Partial<FormData>>({});
+
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init("43w4Ev35LE7Su1Vnf"); // Replace with your actual public key
+  }, []);
 
   const plansData: PlanDetails[] = [
     {
@@ -176,21 +183,6 @@ const Pricing: React.FC = () => {
           },
         }
       );
-
-      // Animación del modal
-      if (modalRef.current) {
-        gsap.fromTo(modalRef.current,
-          { opacity: 0, scale: 0.8 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.4,
-            ease: 'power2.out',
-            paused: true,
-            onStart: () => setIsModalOpen(true),
-          }
-        );
-      }
 
       // Animaciones de hover para servicios
       const serviceItems = servicesRef.current?.children;
@@ -328,14 +320,42 @@ const Pricing: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Appointment Scheduled:', {
-        plan: selectedPlan?.name,
-        ...formData,
-      });
-      setFormSubmitted(true);
+      setIsSubmitting(true);
+      
+      try {
+        const templateParams = {
+          to_name: 'John Jiménez',
+          from_name: formData.fullName,
+          from_email: formData.email,
+          phone: formData.phone,
+          plan_name: selectedPlan?.name,
+          plan_price: selectedPlan?.price,
+          preferred_date: formData.preferredDate,
+          preferred_time: formData.preferredTime,
+          message: `Nueva solicitud de cita para el plan ${selectedPlan?.name} (${selectedPlan?.price}). 
+                   Cliente: ${formData.fullName}
+                   Email: ${formData.email}
+                   Teléfono: ${formData.phone}
+                   Fecha preferida: ${formData.preferredDate}
+                   Hora preferida: ${formData.preferredTime}`
+        };
+
+        await emailjs.send(
+          'service_zgori0t',
+          'template_f71x38g',
+          templateParams
+        );
+
+        setFormSubmitted(true);
+      } catch (error) {
+        console.error('Error sending email:', error);
+        alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -348,9 +368,9 @@ const Pricing: React.FC = () => {
   };
 
   return (
-    <section ref={sectionRef} id="planes" className="py-20 bg-white">
+    <section ref={sectionRef} id="planes" className="py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-20">
           <h2 ref={titleRef} className="text-3xl sm:text-4xl font-bold text-[rgb(19,43,60)] mb-8">
             Planes de Trabajo
           </h2>
@@ -360,17 +380,17 @@ const Pricing: React.FC = () => {
         </div>
 
         {/* Included Services */}
-        <div className="bg-gray-50 rounded-2xl p-8 sm:p-12 mb-12">
-          <h3 ref={servicesTitleRef} className="text-2xl font-semibold text-[rgb(19,43,60)] text-center mb-8">
+        <div className="bg-white rounded-3xl p-10 sm:p-16 mb-16 shadow-sm border border-gray-100">
+          <h3 ref={servicesTitleRef} className="text-2xl font-semibold text-[rgb(19,43,60)] text-center mb-12">
             Servicios Incluidos en Todos los Planes
           </h3>
-          <div ref={servicesRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div ref={servicesRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {includedServices.map((service, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-3 bg-white p-4 rounded-xl"
+                className="flex items-center space-x-4 bg-gradient-to-r from-gray-50 to-white p-6 rounded-2xl border border-gray-100"
               >
-                <div className="w-8 h-8 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-[rgb(19,43,60)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                   <div className="text-[rgb(19,43,60)]">{service.icon}</div>
                 </div>
                 <span className="text-[rgb(19,43,60)] font-medium text-sm">{service.name}</span>
@@ -380,31 +400,31 @@ const Pricing: React.FC = () => {
         </div>
 
         {/* Pricing Plans */}
-        <div ref={plansRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div ref={plansRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 ${
-                plan.popular ? 'ring-2 ring-[rgb(19,43,60)] transform scale-105' : ''
+              className={`relative bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border ${
+                plan.popular ? 'border-[rgb(19,43,60)] ring-2 ring-[rgb(19,43,60)]/20 transform scale-105' : 'border-gray-100'
               }`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-[rgb(19,43,60)] text-white px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1">
+                  <div className="bg-[rgb(19,43,60)] text-white px-6 py-2 rounded-full text-sm font-medium flex items-center space-x-2">
                     <Star size={14} />
                     <span>Más Popular</span>
                   </div>
                 </div>
               )}
               <div className="text-center">
-                <h3 className="text-xl font-bold text-[rgb(19,43,60)] mb-2">{plan.name}</h3>
+                <h3 className="text-xl font-bold text-[rgb(19,43,60)] mb-3">{plan.name}</h3>
                 <div className="text-3xl font-bold text-[rgb(19,43,60)] mb-4">{plan.price}</div>
-                <p className="text-[rgb(19,43,60)]/70 text-sm mb-6">{plan.description}</p>
+                <p className="text-[rgb(19,43,60)]/70 text-sm mb-8 leading-relaxed">{plan.description}</p>
                 <button
                   onClick={() => openModal(plan.name)}
-                  className={`w-full py-3 px-4 rounded-full font-medium transition-all duration-300 ${
+                  className={`w-full py-4 px-6 rounded-2xl font-medium transition-all duration-300 ${
                     plan.popular
-                      ? 'bg-[rgb(19,43,60)] text-white hover:bg-[rgb(19,43,60)]/90'
+                      ? 'bg-[rgb(19,43,60)] text-white hover:bg-[rgb(19,43,60)]/90 shadow-lg'
                       : 'border-2 border-[rgb(19,43,60)] text-[rgb(19,43,60)] hover:bg-[rgb(19,43,60)] hover:text-white'
                   }`}
                 >
@@ -425,54 +445,55 @@ const Pricing: React.FC = () => {
 
       {/* Modal */}
       {isModalOpen && selectedPlan && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div
             ref={modalRef}
-            className="bg-white rounded-2xl p-8 max-w-lg w-full mx-4 relative"
+            className="bg-white rounded-3xl p-8 max-w-lg w-full relative max-h-[90vh] overflow-y-auto"
           >
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 text-[rgb(19,43,60)] hover:text-[rgb(19,43,60)]/70"
+              className="absolute top-6 right-6 text-[rgb(19,43,60)] hover:text-[rgb(19,43,60)]/70 transition-colors"
             >
               <X size={24} />
             </button>
+            
             {!showForm && !formSubmitted && (
               <>
-                <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">{selectedPlan.name}</h3>
-                <p className="text-[rgb(19,43,60)]/70 text-sm mb-4">{selectedPlan.description}</p>
-                <ul className="space-y-3 mb-6">
+                <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4 pr-8">{selectedPlan.name}</h3>
+                <p className="text-[rgb(19,43,60)]/70 text-sm mb-6">{selectedPlan.description}</p>
+                <ul className="space-y-4 mb-8">
                   <li className="flex items-start">
-                    <Check size={16} className="text-[rgb(19,43,60)] mr-2 mt-1 flex-shrink-0" />
+                    <Check size={16} className="text-[rgb(19,43,60)] mr-3 mt-1 flex-shrink-0" />
                     <span className="text-[rgb(19,43,60)] text-sm">
                       <strong>Plataformas:</strong> {selectedPlan.platforms}
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Check size={16} className="text-[rgb(19,43,60)] mr-2 mt-1 flex-shrink-0" />
+                    <Check size={16} className="text-[rgb(19,43,60)] mr-3 mt-1 flex-shrink-0" />
                     <span className="text-[rgb(19,43,60)] text-sm">
                       <strong>Pauta Publicitaria:</strong> {selectedPlan.advertising}
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Check size={16} className="text-[rgb(19,43,60)] mr-2 mt-1 flex-shrink-0" />
+                    <Check size={16} className="text-[rgb(19,43,60)] mr-3 mt-1 flex-shrink-0" />
                     <span className="text-[rgb(19,43,60)] text-sm">
                       <strong>Administración de Canales:</strong> {selectedPlan.channelManagement}
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Check size={16} className="text-[rgb(19,43,60)] mr-2 mt-1 flex-shrink-0" />
+                    <Check size={16} className="text-[rgb(19,43,60)] mr-3 mt-1 flex-shrink-0" />
                     <span className="text-[rgb(19,43,60)] text-sm">
                       <strong>Propuesta de Plan de Medios:</strong> {selectedPlan.mediaPlan}
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Check size={16} className="text-[rgb(19,43,60)] mr-2 mt-1 flex-shrink-0" />
+                    <Check size={16} className="text-[rgb(19,43,60)] mr-3 mt-1 flex-shrink-0" />
                     <span className="text-[rgb(19,43,60)] text-sm">
                       <strong>Informes:</strong> {selectedPlan.reports}
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Check size={16} className="text-[rgb(19,43,60)] mr-2 mt-1 flex-shrink-0" />
+                    <Check size={16} className="text-[rgb(19,43,60)] mr-3 mt-1 flex-shrink-0" />
                     <span className="text-[rgb(19,43,60)] text-sm">
                       <strong>Fee Mensual:</strong> {selectedPlan.price}
                     </span>
@@ -480,23 +501,24 @@ const Pricing: React.FC = () => {
                 </ul>
                 <button
                   onClick={handleConfirmSelection}
-                  className="w-full py-3 px-4 rounded-full bg-[rgb(19,43,60)] text-white font-medium hover:bg-[rgb(19,43,60)]/90"
+                  className="w-full py-4 px-6 rounded-2xl bg-[rgb(19,43,60)] text-white font-medium hover:bg-[rgb(19,43,60)]/90 transition-colors"
                 >
                   Confirmar Selección
                 </button>
               </>
             )}
+            
             {showForm && !formSubmitted && (
               <>
-                <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">
+                <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4 pr-8">
                   Agendar Cita para {selectedPlan.name}
                 </h3>
                 <p className="text-[rgb(19,43,60)]/70 text-sm mb-6">
                   Complete el formulario para programar una cita con nuestro equipo.
                 </p>
-                <form onSubmit={handleFormSubmit} className="space-y-4">
+                <form onSubmit={handleFormSubmit} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-1">
+                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-2">
                       Nombre Completo
                     </label>
                     <input
@@ -504,7 +526,7 @@ const Pricing: React.FC = () => {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)]"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)] focus:border-transparent transition-all"
                       placeholder="Ingrese su nombre"
                     />
                     {formErrors.fullName && (
@@ -512,7 +534,7 @@ const Pricing: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-1">
+                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-2">
                       Correo Electrónico
                     </label>
                     <input
@@ -520,7 +542,7 @@ const Pricing: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)]"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)] focus:border-transparent transition-all"
                       placeholder="Ingrese su correo"
                     />
                     {formErrors.email && (
@@ -528,7 +550,7 @@ const Pricing: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-1">
+                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-2">
                       Teléfono
                     </label>
                     <input
@@ -536,7 +558,7 @@ const Pricing: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)]"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)] focus:border-transparent transition-all"
                       placeholder="Ingrese su teléfono"
                     />
                     {formErrors.phone && (
@@ -544,7 +566,7 @@ const Pricing: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-1">
+                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-2">
                       Fecha Preferida
                     </label>
                     <input
@@ -552,7 +574,7 @@ const Pricing: React.FC = () => {
                       name="preferredDate"
                       value={formData.preferredDate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)]"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)] focus:border-transparent transition-all"
                       min={new Date().toISOString().split('T')[0]}
                     />
                     {formErrors.preferredDate && (
@@ -560,7 +582,7 @@ const Pricing: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-1">
+                    <label className="block text-sm font-medium text-[rgb(19,43,60)] mb-2">
                       Hora Preferida
                     </label>
                     <input
@@ -568,7 +590,7 @@ const Pricing: React.FC = () => {
                       name="preferredTime"
                       value={formData.preferredTime}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)]"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[rgb(19,43,60)] focus:border-transparent transition-all"
                     />
                     {formErrors.preferredTime && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.preferredTime}</p>
@@ -576,28 +598,45 @@ const Pricing: React.FC = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-3 px-4 rounded-full bg-[rgb(19,43,60)] text-white font-medium hover:bg-[rgb(19,43,60)]/90"
+                    disabled={isSubmitting}
+                    className="w-full py-4 px-6 rounded-2xl bg-[rgb(19,43,60)] text-white font-medium hover:bg-[rgb(19,43,60)]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                   >
-                    Agendar Cita
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <span>Enviando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send size={16} />
+                        <span>Agendar Cita</span>
+                      </>
+                    )}
                   </button>
                 </form>
               </>
             )}
+            
             {formSubmitted && (
               <>
-                <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">
-                  ¡Cita Agendada!
-                </h3>
-                <p className="text-[rgb(19,43,60)]/70 text-sm mb-6">
-                  Gracias por seleccionar el plan {selectedPlan.name}. Nos pondremos en contacto
-                  pronto para confirmar su cita.
-                </p>
-                <button
-                  onClick={closeModal}
-                  className="w-full py-3 px-4 rounded-full bg-[rgb(19,43,60)] text-white font-medium hover:bg-[rgb(19,43,60)]/90"
-                >
-                  Cerrar
-                </button>
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Check size={32} className="text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[rgb(19,43,60)] mb-4">
+                    ¡Cita Agendada!
+                  </h3>
+                  <p className="text-[rgb(19,43,60)]/70 text-sm mb-8 leading-relaxed">
+                    Gracias por seleccionar el plan <strong>{selectedPlan.name}</strong>. 
+                    Hemos recibido tu solicitud y nos pondremos en contacto contigo pronto para confirmar tu cita.
+                  </p>
+                  <button
+                    onClick={closeModal}
+                    className="w-full py-4 px-6 rounded-2xl bg-[rgb(19,43,60)] text-white font-medium hover:bg-[rgb(19,43,60)]/90 transition-colors"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </>
             )}
           </div>
