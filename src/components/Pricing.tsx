@@ -365,28 +365,26 @@ const Pricing: React.FC = () => {
         });
 
         const templateParams = {
-          to_name: "John Jiménez",
           from_name: formData.fullName,
           from_email: formData.email,
-          phone: formData.phone,
-          plan_name: selectedPlan?.name,
-          plan_price: selectedPlan?.price,
+          from_phone: formData.phone, // ✅ esta es nueva
+          subject: `Solicitud de cita para el plan ${selectedPlan?.name}`, // ✅ nuevo
           preferred_date: formData.preferredDate,
           preferred_time: formData.preferredTime,
-          registered_date: registered_date,
-          registered_time: registered_time,
+          submission_date: registered_date, // ✅ renombrado
+          submission_time: registered_time, // ✅ renombrado
+
+          plan_name: selectedPlan?.name,
+          plan_price: selectedPlan?.price,
           plan_description: selectedPlan?.description,
           plan_platforms: selectedPlan?.platforms,
           plan_advertising: selectedPlan?.advertising,
           plan_channelManagement: selectedPlan?.channelManagement,
           plan_mediaPlan: selectedPlan?.mediaPlan,
           plan_reports: selectedPlan?.reports,
-          message: `Nueva solicitud de cita para el plan ${selectedPlan?.name} (${selectedPlan?.price}). 
-                    Cliente: ${formData.fullName}
-                    Email: ${formData.email}
-                    Teléfono: ${formData.phone}
-                    Fecha preferida: ${formData.preferredDate}
-                    Hora preferida: ${formData.preferredTime}`,
+
+          // mensaje adicional opcional
+          message: `Nueva solicitud para el plan ${selectedPlan?.name} por ${formData.fullName}`,
         };
 
         await emailjs.send(
