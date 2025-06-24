@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { TrendingUp, Users, Target } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import BackgroundVideo from '../assets/video/fondo.mp4';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,12 +130,28 @@ const Introduction: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-gray-50 relative overflow-hidden">
+    <section ref={sectionRef} className="py-20 relative overflow-hidden">
+      {/* Background Video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        aria-hidden="true"
+      >
+        <source src={BackgroundVideo} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-[rgb(19,43,60)]/20 z-10 pointer-events-none"></div> {/* Menos opacidad */}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={sectionContentRef} className="max-w-4xl mx-auto text-center">
+        <div ref={sectionContentRef} className="max-w-4xl mx-auto text-center relative z-10">
           <h2
             ref={titleRef}
-            className="text-3xl sm:text-4xl font-bold text-[rgb(19,43,60)]/80 mb-8"
+            className="text-3xl sm:text-4xl font-bold text-white mb-8"
           >
             Transformación Digital Estratégica
           </h2>
@@ -156,9 +173,9 @@ const Introduction: React.FC = () => {
             >
               <div className="text-center">
                 <div className="w-16 h-16 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="text-[rgb(19,43,60)]" size={32} />
+                  <TrendingUp className="text-[rgb(19,43,60)]/80" size={32} />
                 </div>
-                <h3 className="text-lg font-semibold text-[rgb(19,43,60)] mb-2">
+                <h3 className="text-lg font-semibold text-[rgb(19,43,60)]/80 mb-2">
                   Crecimiento
                 </h3>
                 <p className="text-[rgb(19,43,60)]/70">
@@ -168,9 +185,9 @@ const Introduction: React.FC = () => {
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="text-[rgb(19,43,60)]" size={32} />
+                  <Users className="text-[rgb(19,43,60)]/80" size={32} />
                 </div>
-                <h3 className="text-lg font-semibold text-[rgb(19,43,60)] mb-2">
+                <h3 className="text-lg font-semibold text-[rgb(19,43,60)]/80 mb-2">
                   Experiencias
                 </h3>
                 <p className="text-[rgb(19,43,60)]/70">
@@ -180,9 +197,9 @@ const Introduction: React.FC = () => {
 
               <div className="text-center">
                 <div className="w-16 h-16 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="text-[rgb(19,43,60)]" size={32} />
+                  <Target className="text-[rgb(19,43,60)]/80" size={32} />
                 </div>
-                <h3 className="text-lg font-semibold text-[rgb(19,43,60)] mb-2">
+                <h3 className="text-lg font-semibold text-[rgb(19,43,60)]/80 mb-2">
                   Resultados
                 </h3>
                 <p className="text-[rgb(19,43,60)]/70">

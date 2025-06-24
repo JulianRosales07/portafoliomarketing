@@ -239,7 +239,7 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div ref={heroContentRef} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7 text-center lg:text-left order-2 lg:order-1">
-
+            
 
             <h1
               ref={titleRef}
