@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { TrendingUp, Users, Target } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import BackgroundVideo from '../assets/video/fondo.mp4';
+import BackgroundVideo from '../assets/video/fondo2.mp4';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,32 +12,19 @@ const Introduction: React.FC = () => {
   const textRef = useRef<HTMLParagraphElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const sectionContentRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Animación del título
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
+
 
       // Animación del texto principal
       gsap.fromTo(
         textRef.current,
         { opacity: 0, y: 30, scale: 0.95 },
         {
-          opacity: 1,
+          opacity: 0.9,
           y: 0,
           scale: 1,
           duration: 0.8,
@@ -129,6 +116,25 @@ const Introduction: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Función para reiniciar el video justo antes de que termine
+    const handleTimeUpdate = () => {
+      if (video.duration - video.currentTime < 0.1) {
+        video.currentTime = 0;
+        video.play();
+      }
+    };
+
+    video.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, []);
+
   return (
     <section ref={sectionRef} className="py-20 relative overflow-hidden">
       {/* Background Video */}
@@ -139,6 +145,8 @@ const Introduction: React.FC = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
         aria-hidden="true"
+        ref={videoRef}
+        onEnded={e => { e.currentTarget.currentTime = 0; e.currentTarget.play(); }}
       >
         <source src={BackgroundVideo} type="video/mp4" />
         Your browser does not support the video tag.
