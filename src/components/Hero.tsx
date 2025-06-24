@@ -239,14 +239,7 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div ref={heroContentRef} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7 text-center lg:text-left order-2 lg:order-1">
-            <div
-              ref={badgeRef}
-              className="inline-flex items-center space-x-3 bg-white/80 backdrop-blur-sm border border-[rgb(19,43,60)]/10 px-6 py-3 rounded-full mb-6 shadow-lg"
-            >
-              <Calendar size={18} className="text-[rgb(19,43,60)]" />
-              <span className="text-[rgb(19,43,60)] font-bold text-lg">2025</span>
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            </div>
+
 
             <h1
               ref={titleRef}
