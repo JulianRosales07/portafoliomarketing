@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { 
   User, 
   Brain, 
@@ -28,10 +28,12 @@ const AboutMe: React.FC = () => {
   const experienceRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
   const animatedTextRef = useRef<HTMLParagraphElement>(null);
+  const sectionContentRef = useRef<HTMLDivElement>(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animación del título principal con efecto de color en scroll
+      // Animación del título principal
       gsap.fromTo(titleRef.current,
         { opacity: 0, y: 50, scale: 0.9 },
         {
@@ -42,29 +44,26 @@ const AboutMe: React.FC = () => {
           ease: "power3.out",
           scrollTrigger: {
             trigger: titleRef.current,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none reverse"
           }
         }
       );
 
-      // Animación de color del texto principal en scroll
+      // Animación de color del texto principal
       if (animatedTextRef.current) {
         gsap.fromTo(animatedTextRef.current,
-          { 
-            color: "rgba(19, 43, 60, 0.4)",
-            opacity: 0.7
-          },
+          { color: "rgba(19, 43, 60, 0.4)", opacity: 0.7 },
           {
             color: "rgba(19, 43, 60, 0.9)",
             opacity: 1,
-            duration: 2,
+            duration: 1.5,
             ease: "power2.out",
             scrollTrigger: {
               trigger: animatedTextRef.current,
-              start: "top 70%",
-              end: "bottom 30%",
-              scrub: 1,
+              start: "top 75%",
+              end: "bottom 25%",
+              scrub: 0.5,
               toggleActions: "play reverse play reverse"
             }
           }
@@ -73,13 +72,13 @@ const AboutMe: React.FC = () => {
 
       // Animación de la introducción
       gsap.fromTo(introRef.current,
-        { opacity: 0, y: 40, rotationX: 15 },
+        { opacity: 0, y: 40, rotationX: 10 },
         {
           opacity: 1,
           y: 0,
           rotationX: 0,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: 0.9,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: introRef.current,
             start: "top 85%",
@@ -90,14 +89,14 @@ const AboutMe: React.FC = () => {
 
       // Animación de habilidades
       gsap.fromTo(skillsRef.current?.children || [],
-        { opacity: 0, y: 30, scale: 0.9 },
+        { opacity: 0, y: 30, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
+          duration: 0.7,
+          stagger: 0.15,
+          ease: "back.out(1.5)",
           scrollTrigger: {
             trigger: skillsRef.current,
             start: "top 85%",
@@ -108,13 +107,13 @@ const AboutMe: React.FC = () => {
 
       // Animación de valores
       gsap.fromTo(valuesRef.current?.children || [],
-        { opacity: 0, x: -40, rotationY: 15 },
+        { opacity: 0, x: -30, rotationY: 10 },
         {
           opacity: 1,
           x: 0,
           rotationY: 0,
-          duration: 0.8,
-          stagger: 0.15,
+          duration: 0.9,
+          stagger: 0.2,
           ease: "power3.out",
           scrollTrigger: {
             trigger: valuesRef.current,
@@ -126,12 +125,12 @@ const AboutMe: React.FC = () => {
 
       // Animación de experiencia
       gsap.fromTo(experienceRef.current?.children || [],
-        { opacity: 0, y: 40, scale: 0.95 },
+        { opacity: 0, y: 50, scale: 0.9 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.7,
+          duration: 0.8,
           stagger: 0.2,
           ease: "power2.out",
           scrollTrigger: {
@@ -149,8 +148,8 @@ const AboutMe: React.FC = () => {
           opacity: 1,
           scale: 1,
           y: 0,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: 1,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: philosophyRef.current,
             start: "top 85%",
@@ -159,14 +158,58 @@ const AboutMe: React.FC = () => {
         }
       );
 
-      // Animaciones de hover para habilidades
+      // Animación de transición al scroll (ajustada para mejor visibilidad)
+      const aboutTransitionTl = gsap.timeline({
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 30%", // Inicia más arriba para mantener visibilidad
+          end: "bottom -20%", // Extiende el final para suavizar
+          scrub: 0.5, // Reducido para transiciones más suaves
+        },
+      });
+
+      aboutTransitionTl
+        .to(sectionContentRef.current, { 
+          duration: 1, 
+          scale: 0.98, // Escala menos agresiva
+          opacity: 0.85, // Mantiene más opacidad
+          y: -30 // Movimiento vertical más suave
+        })
+        .to(titleRef.current, { 
+          opacity: 0.7, // No desaparece completamente
+          y: -50, // Menos desplazamiento
+          scale: 0.9
+        }, "<")
+        .to(skillsRef.current, { 
+          opacity: 0.8, // Mantiene visibilidad
+          y: 40, // Menos desplazamiento
+          stagger: 0.1
+        }, "<")
+        .to(valuesRef.current, { 
+          opacity: 0.8, // Mantiene visibilidad
+          x: -40, // Menos desplazamiento
+          stagger: 0.1
+        }, "<")
+        .to(experienceRef.current, { 
+          opacity: 0.8, // Mantiene visibilidad
+          scale: 0.95
+        }, "<")
+        .to(philosophyRef.current, { 
+          opacity: 0.8, // Mantiene visibilidad
+          scale: 0.95,
+          y: 20
+        }, "<");
+
+      // Animaciones de hover
       const skillCards = skillsRef.current?.children;
       if (skillCards) {
         Array.from(skillCards).forEach(card => {
           card.addEventListener('mouseenter', () => {
             gsap.to(card, { 
-              scale: 1.05, 
-              y: -5,
+              scale: 1.03, 
+              y: -8,
+              boxShadow: "0 10px 20px rgba(19, 43, 60, 0.1)",
               duration: 0.3, 
               ease: "power2.out" 
             });
@@ -175,6 +218,7 @@ const AboutMe: React.FC = () => {
             gsap.to(card, { 
               scale: 1, 
               y: 0,
+              boxShadow: "0 0px 0px rgba(19, 43, 60, 0)",
               duration: 0.3, 
               ease: "power2.out" 
             });
@@ -182,13 +226,13 @@ const AboutMe: React.FC = () => {
         });
       }
 
-      // Animaciones de hover para valores
       const valueCards = valuesRef.current?.children;
       if (valueCards) {
         Array.from(valueCards).forEach(card => {
           card.addEventListener('mouseenter', () => {
             gsap.to(card, { 
-              x: 5,
+              x: 8,
+              boxShadow: "0 10px 20px rgba(19, 43, 60, 0.1)",
               duration: 0.3, 
               ease: "power2.out" 
             });
@@ -196,13 +240,13 @@ const AboutMe: React.FC = () => {
           card.addEventListener('mouseleave', () => {
             gsap.to(card, { 
               x: 0,
+              boxShadow: "0 0px 0px rgba(19, 43, 60, 0)",
               duration: 0.3, 
               ease: "power2.out" 
             });
           });
         });
       }
-
     }, sectionRef);
 
     return () => ctx.revert();
@@ -217,7 +261,7 @@ const AboutMe: React.FC = () => {
     {
       category: "E-commerce",
       icon: <TrendingUp size={24} />,
-      items: ["Shopify", "WooCommerce", "Conversion Optimization", "UX/UI Strategy"]
+      items: [ "Conversion Optimization", "UX/UI Strategy"]
     },
     {
       category: "Publicidad Digital",
@@ -227,36 +271,36 @@ const AboutMe: React.FC = () => {
     {
       category: "Herramientas",
       icon: <Zap size={24} />,
-      items: ["Google Analytics", "Facebook Business", "Klaviyo", "HubSpot"]
+      items: ["Google Analytics", "Facebook Business", "HubSpot"]
     }
   ];
 
   const values = [
     {
       title: "Orientación a Resultados",
-      description: "Cada estrategia está diseñada para generar ROI medible y crecimiento sostenible.",
+      description: "Estrategias diseñadas para generar ROI medible y crecimiento sostenible.",
       icon: <Award size={20} />
     },
     {
       title: "Innovación Constante",
-      description: "Siempre explorando nuevas tendencias y tecnologías para mantener ventaja competitiva.",
+      description: "Explorando nuevas tendencias y tecnologías para mantener ventaja competitiva.",
       icon: <Lightbulb size={20} />
     },
     {
       title: "Colaboración Estratégica",
-      description: "Trabajo en equipo con clientes para crear soluciones personalizadas y efectivas.",
+      description: "Trabajo en equipo con clientes para soluciones personalizadas y efectivas.",
       icon: <Users size={20} />
     },
     {
       title: "Aprendizaje Continuo",
-      description: "Actualización constante en las últimas tendencias del marketing digital.",
+      description: "Actualización constante en tendencias de marketing digital.",
       icon: <BookOpen size={20} />
     }
   ];
 
   const experience = [
     {
-      metric: "+5 años",
+      metric: "+6 años",
       description: "Experiencia en Marketing Digital",
       icon: <User size={24} />
     },
@@ -281,14 +325,22 @@ const AboutMe: React.FC = () => {
     <section
       ref={sectionRef}
       id="sobre-mi"
-      className="py-24 bg-gradient-to-b from-white to-gray-50"
+      className="py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden"
+      aria-labelledby="about-me-heading"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div ref={sectionContentRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-[rgb(19,43,60)]/5 rounded-full blur-xl"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-[rgb(19,43,60)]/3 rounded-full blur-2xl"></div>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-16">
           <h2
             ref={titleRef}
-            className="text-3xl sm:text-4xl font-extrabold text-[rgb(19,43,60)] mb-8 tracking-tight"
+            id="about-me-heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[rgb(19,43,60)] mb-8 tracking-tight"
           >
             Sobre Mí
           </h2>
@@ -296,19 +348,23 @@ const AboutMe: React.FC = () => {
 
         {/* Introduction */}
         <div ref={introRef} className="max-w-4xl mx-auto mb-24">
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
-            <div className="relative w-40 h-40 md:w-48 md:h-48 flex-shrink-0 rounded-lg overflow-hidden group">
-              {/* Subtle gradient overlay for elegance */}
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div className="relative w-40 h-40 md:w-48 md:h-48 flex-shrink-0 rounded-2xl overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[rgb(19,43,60)]/10 transition-all duration-300 group-hover:to-[rgb(19,43,60)]/20"></div>
-              <img
-                src={john}
-                alt="John Jiménez"
-                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-102 group-hover:brightness-110"
-              />
-              {/* Clean border with soft hover glow */}
-              <div className="absolute inset-0 rounded-lg border-2 border-[rgb(19,43,60)]/10 transition-all duration-300 group-hover:border-[rgb(19,43,60)]/30 group-hover:shadow-[0_0_10px_rgba(19,43,60,0.2)]"></div>
-              {/* Refined badge positioned for square shape */}
-              <div className="absolute top-2 right-2 bg-[rgb(19,43,60)]/80 rounded-full px-3 py-1 text-xs font-semibold text-white transition-all duration-300 group-hover:bg-[rgb(19,43,60)] group-hover:scale-105">
+              {!imageError ? (
+                <img
+                  src={john}
+                  alt="John Jiménez, Product Marketing Manager"
+                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-105"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-[rgb(19,43,60)]/10">
+                  <User size={48} className="text-[rgb(19,43,60)]" aria-hidden="true" />
+                </div>
+              )}
+              <div className="absolute inset-0 rounded-2xl border-2 border-[rgb(19,43,60)]/10 transition-all duration-300 group-hover:border-[rgb(19,43,60)]/20 group-hover:shadow-[0_0_12px_rgba(19,43,60,0.15)]"></div>
+              <div className="absolute top-3 right-3 bg-[rgb(19,43,60)]/80 rounded-full px-3 py-1 text-xs font-semibold text-white transition-all duration-300 group-hover:bg-[rgb(19,43,60)] group-hover:scale-105">
                 PMM
               </div>
             </div>
@@ -318,9 +374,9 @@ const AboutMe: React.FC = () => {
               </h3>
               <p
                 ref={animatedTextRef}
-                className="text-lg leading-relaxed mb-6 text-balance text-justify transition-all duration-500"
+                className="text-lg leading-relaxed text-[rgb(19,43,60)]/90 mb-6 text-balance text-justify"
               >
-                Soy Mercadólogo con más de 6 años de experiencia en marketing y publicidad digital e innovación, he desarrollado productos y servicios a nivel nacional e internacional en sectores como: moda en textiles y accesorios, medicina estética y de belleza, inmobiliario, gastronómico y hospitalidad. Además he participado en la formulación y ejecución de proyectos de fortalecimiento empresarial desde la transformación digital, análisis de datos, paid media y comunicaciones, aportando así, a procesos de crecimiento, sostenibilidad y expansión en el mediano plazo.
+                Soy Mercadólogo con más de 6 años de experiencia en marketing y publicidad digital e innovación. He desarrollado productos y servicios a nivel nacional e internacional en sectores como moda, medicina estética, inmobiliario, gastronómico y hospitalidad. Mi enfoque en transformación digital, análisis de datos, paid media y comunicaciones ha impulsado el crecimiento, la sostenibilidad y la expansión de empresas en el mediano plazo.
               </p>
             </div>
           </div>
@@ -328,32 +384,33 @@ const AboutMe: React.FC = () => {
 
         {/* Skills Section */}
         <div className="mb-24">
-          <h3 className="text-2xl font-bold text-[rgb(19,43,60)] text-center mb-12">
+          <h3 className="text-2xl sm:text-3xl font-bold text-[rgb(19,43,60)] text-center mb-12">
             Áreas de Especialización
           </h3>
-
           <div
             ref={skillsRef}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {skills.map((skill, index) => (
               <div
                 key={index}
-                className="bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-xl transition-all duration-300"
+                className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+                role="region"
+                aria-label={`Habilidad: ${skill.category}`}
               >
-                <div className="w-14 h-14 bg-[rgb(19,43,60)]/10 rounded-2xl flex items-center justify-center mb-5">
+                <div className="w-12 h-12 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center mb-4">
                   <div className="text-[rgb(19,43,60)]">{skill.icon}</div>
                 </div>
-                <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-4">
+                <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-3">
                   {skill.category}
                 </h4>
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {skill.items.map((item, itemIndex) => (
                     <li
                       key={itemIndex}
                       className="text-[rgb(19,43,60)]/70 text-sm flex items-center"
                     >
-                      <div className="w-2 h-2 bg-[rgb(19,43,60)] rounded-full mr-3"></div>
+                      <div className="w-1.5 h-1.5 bg-[rgb(19,43,60)] rounded-full mr-2"></div>
                       {item}
                     </li>
                   ))}
@@ -365,22 +422,28 @@ const AboutMe: React.FC = () => {
 
         {/* Experience Metrics */}
         <div className="mb-24">
+          <h3 className="text-2xl sm:text-3xl font-bold text-[rgb(19,43,60)] text-center mb-12">
+            Logros Profesionales
+          </h3>
           <div
             ref={experienceRef}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {experience.map((item, index) => (
               <div
                 key={index}
-                className="text-center bg-white rounded-3xl p-8 shadow-sm"
+                className="text-center bg-white rounded-2xl p-6 shadow-sm relative overflow-hidden group"
+                role="region"
+                aria-label={`Logro: ${item.description}`}
               >
-                <div className="w-16 h-16 bg-[rgb(19,43,60)]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                <div className="absolute inset-0 bg-[rgb(19,43,60)]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                <div className="w-14 h-14 bg-[rgb(19,43,60)]/10 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
                   <div className="text-[rgb(19,43,60)]">{item.icon}</div>
                 </div>
-                <div className="text-2xl font-bold text-[rgb(19,43,60)] mb-3">
+                <div className="text-2xl font-bold text-[rgb(19,43,60)] mb-2 relative z-10">
                   {item.metric}
                 </div>
-                <p className="text-[rgb(19,43,60)]/70 text-sm">
+                <p className="text-[rgb(19,43,60)]/70 text-sm relative z-10">
                   {item.description}
                 </p>
               </div>
@@ -390,24 +453,25 @@ const AboutMe: React.FC = () => {
 
         {/* Values */}
         <div className="mb-24">
-          <h3 className="text-2xl font-bold text-[rgb(19,43,60)] text-center mb-12">
+          <h3 className="text-2xl sm:text-3xl font-bold text-[rgb(19,43,60)] text-center mb-12">
             Mis Valores Profesionales
           </h3>
-
           <div
             ref={valuesRef}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           >
             {values.map((value, index) => (
               <div
                 key={index}
-                className="flex items-start space-x-5 bg-white rounded-3xl p-8 shadow-sm"
+                className="flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm transition-all duration-300"
+                role="region"
+                aria-label={`Valor: ${value.title}`}
               >
-                <div className="w-12 h-12 bg-[rgb(19,43,60)] rounded-2xl flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-[rgb(19,43,60)] rounded-full flex items-center justify-center flex-shrink-0">
                   <div className="text-white">{value.icon}</div>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-3">
+                  <h4 className="text-lg font-semibold text-[rgb(19,43,60)] mb-2">
                     {value.title}
                   </h4>
                   <p className="text-[rgb(19,43,60)]/70 leading-relaxed text-sm">
@@ -422,23 +486,22 @@ const AboutMe: React.FC = () => {
         {/* Philosophy */}
         <div
           ref={philosophyRef}
-          className="bg-[rgb(19,43,60)] rounded-3xl p-10 sm:p-14 text-center"
+          className="bg-[rgb(19,43,60)] rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
+          role="region"
+          aria-label="Filosofía de trabajo"
         >
-          <div className="max-w-3xl mx-auto">
-            <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Heart size={32} className="text-white" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[rgb(19,43,60)] to-[rgb(44,62,80)]/80 opacity-20"></div>
+          <div className="max-w-3xl mx-auto relative z-10">
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Heart size={28} className="text-white" aria-hidden="true" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-6">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">
               Mi Filosofía de Trabajo
             </h3>
             <p className="text-white/90 text-lg leading-relaxed mb-6">
-              "Creo firmemente que el marketing digital exitoso no se trata solo
-              de números y métricas, sino de crear conexiones auténticas entre
-              las marcas y las personas. Cada proyecto es una oportunidad de
-              contar una historia que resuene, genere valor y construya
-              relaciones duraderas."
+              "El marketing digital exitoso va más allá de métricas; se trata de forjar conexiones auténticas entre marcas y personas. Cada proyecto es una oportunidad para narrar historias que inspiren, generen valor y construyan relaciones duraderas."
             </p>
-            <div className="flex items-center justify-center space-x-2">
+            <div className="flex items-center justify-center gap-2">
               <div className="w-8 h-0.5 bg-white/40 rounded-full"></div>
               <span className="text-white/80 font-medium">
                 John Jiménez, PMM

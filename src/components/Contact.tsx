@@ -10,6 +10,7 @@ const Contact: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const contactCardsRef = useRef<HTMLDivElement>(null);
+  const sectionContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -47,6 +48,40 @@ const Contact: React.FC = () => {
           }
         }
       );
+
+      // ANIMACIÓN DE TRANSICIÓN AL SCROLL - Similar al ejemplo
+      const contactTransitionTl = gsap.timeline({
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "center center",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      contactTransitionTl
+        .to(sectionContentRef.current, { 
+          duration: 1, 
+          scale: 0.9,
+          opacity: 0.3,
+          y: -150
+        })
+        .to(titleRef.current, { 
+          opacity: 0,
+          y: -200,
+          scale: 0.6
+        }, "<")
+        .to(contactCardsRef.current, { 
+          opacity: 0,
+          y: 120,
+          stagger: 0.1,
+          rotationY: -20
+        }, "<")
+        .to(sectionContentRef.current, {
+          opacity: 0,
+          duration: 0.3,
+        }, 0.8);
 
       // Animaciones de hover para las tarjetas
       const contactCards = contactCardsRef.current?.children;
@@ -119,13 +154,13 @@ const Contact: React.FC = () => {
       label: "LinkedIn",
       value: "John Jiménez",
       icon: <Linkedin size={20} />,
-      link: "https://www.linkedin.com/in/john-jimenez1/"
+      link: "https://linkedin.com/in/johnjimenez"
     }
   ];
 
   return (
-    <section ref={sectionRef} id="contacto" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} id="contacto" className="py-20 bg-gray-50 relative overflow-hidden">
+      <div ref={sectionContentRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 ref={titleRef} className="text-3xl sm:text-4xl font-bold text-[rgb(19,43,60)] mb-8">
             Conversemos sobre tu Proyecto
